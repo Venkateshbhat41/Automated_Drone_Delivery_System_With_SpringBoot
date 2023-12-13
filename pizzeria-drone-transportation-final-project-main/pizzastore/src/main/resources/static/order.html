@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Order Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="header">🍕 PiPi Zaa 🍕</h1>
+
+        <!-- Form to add a new pizza order -->
+        <form id="addOrderForm">
+            <label for="pizzaType">Pizza Type:</label>
+            <input type="text" id="pizzaType" name="pizzaType" required>
+            
+            <label for="deliveryAddress">Delivery Address:</label>
+            <input type="text" id="deliveryAddress" name="deliveryAddress" required>
+
+            <button type="button" onclick="addPizzaOrder()">Place Pizza Order</button>
+        </form>
+
+        <hr>
+
+        <h2>PizzaStore System Management</h2>
+
+        <table id="orderTable">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Pizza Type</th>
+                    <th>Order Time</th>
+                    <th>Delivery Address</th>
+                    <th>Action</th> <!-- New column for Cancel Order button -->
+                    <th>Drone Delivery</th> <!-- New column for Drone Delivery button -->
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+                  function displayOrders() {
+                fetch('http://localhost:8081/pizzastore/v1/orders')
+                    .then(response => response.json())
+                    .then(data => {
+                        var tableBody = document.querySelector('#orderTable tbody');
+                        tableBody.innerHTML = ''; 
+
+                        data.forEach(order => {
+                            var row = tableBody.insertRow();
+                            row.insertCell(0).textContent = order.orderId;
+                            row.insertCell(1).textContent = order.pizzaType;
+                            
+                            // Format the order time before displaying
+                            var orderTime = new Date(order.orderTime);
+                            var formattedDate = orderTime.toLocaleDateString(); 
+                            var formattedTime = orderTime.toLocaleTimeString();
+
+                            row.insertCell(2).innerHTML = `${formattedDate}<br>${formattedTime}`;
+
+                            row.insertCell(3).textContent = order.deliveryAddress;
+
+                     // Add Cancel Order button with an onclick event
+                        var cancelOrderButton = document.createElement('button');
+                        cancelOrderButton.textContent = 'Cancel Order';
+                        cancelOrderButton.style.fontSize = '16px'; 
+                        cancelOrderButton.onclick = function() {
+                            cancelPizzaOrder(order.orderId);
+                        };
+                        row.insertCell(4).appendChild(cancelOrderButton);
+
+                        // Add Drone Delivery button with an onclick event
+                        var droneDeliveryButton = document.createElement('button');
+                        droneDeliveryButton.innerHTML = '<span style="font-size:26px;">🚁</span>'; 
+                        droneDeliveryButton.style.padding = '5px'; 
+                        droneDeliveryButton.style.borderRadius = '5px'; 
+                        droneDeliveryButton.onclick = function() {
+                            assignDroneDelivery(order.orderId);
+                        };
+                        row.insertCell(5).appendChild(droneDeliveryButton);
+
+
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function addPizzaOrder() {
+    var pizzaType = document.getElementById('pizzaType').value;
+    var deliveryAddress = document.getElementById('deliveryAddress').value;
+
+    fetch('http://localhost:8081/pizzastore/v1/orders/place', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `pizzaType=${pizzaType}&deliveryAddress=${deliveryAddress}`,
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Response from server:', data); 
+
+        // Display success message with order ID if available
+        if (data && data.orderId) {
+            alert('🎉 Order placed successfully! Order ID: ' + data.orderId);
+
+            // Refresh the order table after placing an order
+            displayOrders();
+        } else {
+            // Display an error message if the orderId is not available
+            alert('Error placing order. Please try again.');
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+        function cancelPizzaOrder(orderId) {
+            fetch(`http://localhost:8081/pizzastore/v1/orders/${orderId}`, {
+                method: 'DELETE',
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                // Refresh the order table after canceling the order
+                displayOrders();
+            })
+            .catch((error) => {
+                console.error('Error:', error)
+            });
+        }
+
+       // Function to assign a drone for delivery
+function assignDroneDelivery(orderId) {
+    // Implement logic to assign a drone for delivery
+    fetch(`http://localhost:8081/pizzastore/v1/orders/assign/${orderId}`, {
+        method: 'POST',
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log(data);
+
+        // Display success message with drone assignment status
+        alert('Drone assigned successfully for Order ID: ' + orderId);
+
+        // Refresh the order table after assigning the drone
+        displayOrders();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+        // Initial display when the page loads
+        displayOrders();
+    </script>
+</body>
+</html>

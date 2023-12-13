@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone Management</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+
+<h2> 🎮 Drones System Monitoring Management 🚁 </h2>
+
+<button onclick="loadDrones()">Load Drones</button>
+
+<table id="droneTable">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Capacity</th>
+        <th>Actions</th>
+    </tr>
+</table>
+
+<h3>Add New Drones</h3>
+<form id="addDroneForm">
+    <label>ID: <input type="text" id="droneId" required></label>
+    <label>Name: <input type="text" id="droneName" required></label>
+    <label>Type: <input type="text" id="droneType" required></label>
+    <label>Capacity: <input type="number" id="droneCapacity" required></label>
+    <button type="button" onclick="addDrone()">Add Drone</button>
+</form>
+
+<script>
+    function loadDrones() {
+        // Fetch drones and populate the table
+        fetch('/control/drones')
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById('droneTable');
+                table.innerHTML = '<tr><th>ID</th><th>Name</th><th>Type</th><th>Capacity</th><th>Actions</th></tr>';
+                data.forEach(drone => {
+                    const row = table.insertRow();
+                    row.insertCell(0).textContent = drone.id;
+                    row.insertCell(1).textContent = drone.name;
+                    row.insertCell(2).textContent = drone.type;
+                    row.insertCell(3).textContent = drone.capacity;
+                    const actionsCell = row.insertCell(4);
+                    actionsCell.innerHTML = `<button class="action-btn" onclick="updateDrone('${drone.id}', '${drone.name}', '${drone.type}', ${drone.capacity})"> 🆕 Update info</button>
+                                            <button class="action-btn" onclick="cancelDrone('${drone.id}')"> ❌ Cancel</button>
+                                            <button class="action-btn" onclick="systemUpdate('${drone.id}')"> 📲 System Update</button>
+                                            <button class="action-btn" onclick="batteryLife('${drone.id}')"> 🔋 Battery Life</button>
+                                            <button class="action-btn" onclick="maintenanceLogs('${drone.id}')"> 📘 Maintenance Logs</button>
+                                            <button class="action-btn" onclick="routineActivity('${drone.id}')"> 📈 Routine Activity</button>
+                                            <button class="action-btn" onclick="routesPlans('${drone.id}')">📍 Routes Plans</button>`;
+
+                                            actionsCell.innerHTML += `<button class="action-btn gray-btn" onclick="startDelivery('${drone.id}')"> 🅾️ Start Delivery</button>
+                                            <button class="action-btn gray-btn" onclick="completeDelivery('${drone.id}')"> ✅ Complete Delivery</button>`;
+
+                });
+
+            })
+            .catch(error => console.error('Error fetching drones:', error));
+    }
+
+    function addDrone() {
+        const form = document.getElementById('addDroneForm');
+        const drone = {
+            id: form.elements['droneId'].value,
+            name: form.elements['droneName'].value,
+            type: form.elements['droneType'].value,
+            capacity: parseInt(form.elements['droneCapacity'].value)
+        };
+
+        fetch('http://localhost:8080/control/drones', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(drone),
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                loadDrones();
+            })
+            .catch(error => console.error('Error adding drone:', error));
+    }
+
+    function updateDrone(id, name, type, capacity) {
+        const newName = prompt('Enter the new name for the drone:', name);
+        if (newName) {
+            const updatedDrone = { id, name: newName, type, capacity };
+            fetch('http://localhost:8080/control/drones', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedDrone),
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                loadDrones();
+            })
+            .catch(error => console.error('Error updating drone:', error));
+        }
+    }
+
+    function cancelDrone(droneId) {
+        const confirmCancel = confirm('Are you sure you want to cancel this drone?');
+        if (confirmCancel) {
+            fetch(`/control/drones/${droneId}`, {
+                method: 'DELETE',
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                loadDrones();
+            })
+            .catch(error => console.error('Error canceling drone:', error));
+        }
+    }
+
+    // Add the new functions for the additional buttons
+    function systemUpdate(droneId) {
+        // Implement system update logic here
+        console.log(`System update for drone ${droneId}`);
+    }
+
+    function batteryLife(droneId) {
+        // Implement battery life logic here
+        console.log(`Check battery life for drone ${droneId}`);
+    }
+
+    function maintenanceLogs(droneId) {
+        // Implement maintenance logs logic here
+        console.log(`View maintenance logs for drone ${droneId}`);
+    }
+
+    function routineActivity(droneId) {
+        // Implement routine activity logic here
+        console.log(`View routine activity for drone ${
+            droneId}`);
+    }
+
+    function routesPlans(droneId) {
+        // Implement route plans logic here
+        console.log(`View route plans for drone ${droneId}`);
+    }
+
+    function startDelivery(droneId) {
+        // Implement start delivery logic here
+        console.log(`Start delivery for drone ${droneId}`);
+    }
+
+    function completeDelivery(droneId) {
+        // Implement complete delivery logic here
+        console.log(`Complete delivery for drone ${droneId}`);
+    }
+</script>
+
+</body>
+</html>
+

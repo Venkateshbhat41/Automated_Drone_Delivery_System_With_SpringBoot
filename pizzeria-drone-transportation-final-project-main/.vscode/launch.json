@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "DronepizzaApplication",
+            "request": "launch",
+            "mainClass": "fi.sade23.pizzeria.dronepizza.DronepizzaApplication",
+            "projectName": "dronepizza"
+        },
+        {
+            "type": "java",
+            "name": "FleetpizzaApplication",
+            "request": "launch",
+            "mainClass": "fi.sade23.pizzeria.fleetpizza.FleetpizzaApplication",
+            "projectName": "fleetpizza"
+        }
+    ]
+}
