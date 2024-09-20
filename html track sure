@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Track Sure - Transportation Services</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Track Sure</h1>
+        <img src="track_sure_logo.png" alt="Track Sure Logo">
+    </header>
+    <main>
+        <h2>Available Goods</h2>
+        <ul id="goodsList">
+            </ul>
+        <div id="selectedGoods">
+            <h2>Selected Goods</h2>
+            <ul id="selectedGoodsList">
+                </ul>
+        </div>
+        <form id="transportationForm">
+            <label for="pickupAddress">Pickup Address:</label>
+            <input type="text" id="pickupAddress" name="pickupAddress" required>
+            <label for="deliveryAddress">Delivery Address:</label>
+            <input type="text" id="deliveryAddress" name="deliveryAddress" required>
+            <label for="paymentMethod">Payment Method:</label>
+            <select id="paymentMethod" name="paymentMethod">
+                <option value="cashOnDelivery">Cash on Delivery</option>
+            </select>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="trackingInfo">
+            <h2>Tracking Information</h2>
+            <p id="truckLocation">Truck Location: N/A</p>
+            <p id="estimatedDeliveryDate">Estimated Delivery Date: N/A</p>
+            <p id="totalCost">Total Cost: N/A</p>
+        </div>
+    </main>
+</body>
+</html>
