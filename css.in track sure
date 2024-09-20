@@ -1,0 +1,20 @@
+/* Basic styling, adjust as needed */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+#goodsList, #selectedGoodsList {
+    list-style-type: none;
+    padding: 0;
+}
+#transportationForm {
+    margin-top: 20px;
+}
+#trackingInfo {
+    margin-top: 30px;
+}
