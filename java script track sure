@@ -1,0 +1,86 @@
+// Replace with actual data from your backend
+const availableGoods = [
+    (   
+        name: "FMCG products",
+        type: "Container",
+        weight: 35000kg,
+        price: 50000RS,
+        pickupLocation: "Hubli",
+        destination: "Goa"
+    },
+  name: "Crushed Jelly stones",
+        type: "tipper",
+        weight: 25000kg,
+        price: 30000RS,
+        pickupLocation: "bengaluru",
+        destination: "Hassan"
+    },
+  name: "Petroleum products",
+        type: "TANKER",
+        weight: 35000kg,
+        price: 50000RS,
+        pickupLocation: "mumbai",
+        destination: "Goa"
+    },
+    name: "milk products",
+        type: "TANKER",
+        weight: 35000kg,
+        price: 50000RS,
+        pickupLocation: "bengaluru",
+        destination: "chikamangaluru"
+    },
+  name: "steel ",
+        type: "Trailer trucks",
+        weight: 25000kg,
+        price: 25000RS,
+        pickupLocation: "keral",
+        destination: "coorg"
+    },
+   name: "magneses ",
+        type: "LIGHT COMMERCIAL VECHILE(407) ",
+        weight: 25000kg,
+        price: 30000RS,
+        pickupLocation:"Mangalore",
+        destination: "tumkur"
+    },
+    // ... more goods
+];
+
+const goodsListElement = document.getElementById("goodsList");
+const selectedGoodsListElement = document.getElementById("selectedGoodsList");
+const transportationForm = document.getElementById("transportationForm");
+const truckLocationElement = document.getElementById("truckLocation");
+const estimatedDeliveryDateElement = document.getElementById("estimatedDeliveryDate");
+const totalCostElement = document.getElementById("totalCost");
+
+// Function to display available goods
+function displayGoods() {
+    availableGoods.forEach(good => {
+        const li = document.createElement("li");
+        li.textContent = `${good.name} - ${good.type} - ${good.weight} kg - ${good.price} INR`;
+        li.addEventListener("click", () => addToSelectedGoods(good));
+        goodsListElement.appendChild(li);
+    });
+}
+
+// Function to add selected goods
+function addToSelectedGoods(good) {
+    const li = document.createElement("li");
+    li.textContent = `${good.name} - ${good.type} - ${good.weight} kg - ${good.price} INR`;
+    selectedGoodsListElement.appendChild(li);
+}
+
+// Function to submit transportation details
+function submitTransportationDetails(event) {
+    event.preventDefault();
+    // Implement logic to submit form data, calculate total cost, and start tracking
+    // ...
+    truckLocationElement.textContent = "Truck Location: Loading";
+    estimatedDeliveryDateElement.textContent = "Estimated Delivery Date: Calculating";
+    totalCostElement.textContent = "Total Cost: Calculating";
+}
+
+// ... other functions for tracking, payment, etc.
+
+displayGoods();
+transportationForm.addEventListener("submit", submitTransportationDetails);
